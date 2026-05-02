@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0f13">
+<title>Repertório</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{--bg:#0f0f13;--surface:#1a1a22;--surface2:#23232f;--accent:#f5c842;--text:#f0ede8;--muted:#7a7a8c;--border:#2e2e3e;--green:#25D366;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);}
+body.light{--bg:#f5f5f0;--surface:#ffffff;--surface2:#f0ede8;--accent:#d4a017;--text:#1a1a22;--muted:#888;--border:#ddd;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;min-height:100vh;padding:calc(var(--safe-top) + 16px) 16px calc(var(--safe-bot) + 100px);}
+
+.app-header{text-align:center;margin-bottom:20px;}
+.app-header h1{font-size:1.6rem;font-weight:800;color:var(--accent);}
+.app-header p{color:var(--muted);font-size:.8rem;margin-top:4px;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;}
+.lbl{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:8px;}
+input[type=text],select,textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:.92rem;padding:10px 14px;outline:none;-webkit-appearance:none;appearance:none;}
+textarea{resize:none;line-height:1.4;}
+input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent);}
+.day-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+
+/* Song cards */
+#songs-list{display:flex;flex-direction:column;gap:12px;}
+.song-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:12px;}
+.song-card.has-cifra{border-color:#2a4a2e;}
+.song-card.has-vs{border-color:#2a2a5e;}
+.song-card.has-cifra.has-vs{border-color:#2a4a4e;}
+
+.song-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.song-num{font-size:.62rem;color:var(--muted);font-weight:700;text-transform:uppercase;}
+.rm-btn{background:none;border:1px solid #2e1e1e;color:#8a5a5a;border-radius:8px;font-family:inherit;font-size:.72rem;padding:3px 8px;cursor:pointer;}
+
+.song-row1{display:grid;grid-template-columns:1fr 72px;gap:8px;margin-bottom:8px;}
+.name-wrap{position:relative;}
+.name-inp{background:var(--bg);border:1px solid #1e1e2a;border-radius:10px;color:var(--text);font-family:inherit;font-size:.88rem;padding:8px 12px;outline:none;width:100%;-webkit-appearance:none;}
+.name-inp:focus{border-color:var(--accent);}
+.tone-sel{width:72px;background:var(--bg);border:1px solid #1e1e2a;border-radius:10px;color:var(--accent);font-family:inherit;font-size:.88rem;font-weight:700;padding:8px 4px;text-align:center;-webkit-appearance:none;appearance:none;outline:none;}
+
+.link-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.link-row input{flex:1;background:var(--bg);border:1px solid #1e1e2a;border-radius:10px;color:#7a9abf;font-family:inherit;font-size:.78rem;padding:7px 10px;outline:none;-webkit-appearance:none;width:100%;}
+.badge-pill{font-size:.68rem;font-weight:700;border-radius:6px;padding:3px 7px;white-space:nowrap;flex-shrink:0;}
+.yt-pill{background:#c0392b;color:#fff;}
+.vs-pill{background:#2d2d7e;color:#9090ff;}
+.cifra-pill.found{background:#1a3a20;color:#5ecf7a;}
+.cifra-pill.none{background:#2a2a1a;color:#888;}
+
+.cifra-inp{flex:1;background:var(--bg);border:1px solid #1e1e2a;border-radius:10px;font-family:inherit;font-size:.78rem;padding:7px 10px;outline:none;-webkit-appearance:none;width:100%;}
+.cifra-inp.found{color:#5ecf7a;}
+.cifra-inp.empty{color:var(--muted);}
+
+.obs-inp{background:var(--bg);border:1px solid #1e1e2a;border-radius:10px;color:var(--muted);font-family:inherit;font-size:.78rem;padding:7px 10px;outline:none;width:100%;-webkit-appearance:none;margin-top:8px;}
+.obs-inp:focus{border-color:var(--border);}
+.obs-inp.has-text{color:var(--text);}
+
+/* Autocomplete */
+.autocomplete-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#1e1e2c;border:1px solid #3a3a52;border-radius:10px;z-index:200;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.6);}
+.ac-header{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:6px 12px 4px;border-bottom:1px solid #2e2e3e;}
+.ac-item{padding:10px 12px;cursor:pointer;border-bottom:1px solid #23232f;}
+.ac-item:last-child{border-bottom:none;}
+.ac-item:active{background:#2a3a2a;}
+.ac-name{font-size:.85rem;color:var(--text);font-weight:600;margin-bottom:2px;}
+.ac-name em{color:var(--accent);font-style:normal;}
+.ac-meta{font-size:.7rem;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.tag{display:inline-block;font-size:.63rem;font-weight:700;border-radius:5px;padding:1px 6px;}
+.tag-cifra{background:#1a3a20;color:#5ecf7a;}
+.tag-tom{background:#2a2a10;color:var(--accent);}
+
+.add-btn{width:100%;background:transparent;border:1px dashed var(--border);border-radius:10px;color:var(--muted);font-family:inherit;font-size:.88rem;padding:11px;cursor:pointer;margin-top:10px;}
+
+/* Preview */
+.preview-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+#preview-box{background:#0d1a0f;border:1px solid #2a3d2e;border-radius:12px;padding:14px;font-size:.85rem;line-height:1.75;white-space:pre-wrap;word-break:break-all;color:#c8eacc;min-height:60px;}
+
+/* Action buttons */
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.action-btn{border:none;border-radius:12px;font-family:inherit;font-size:.85rem;font-weight:700;padding:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-copy{background:var(--surface2);color:var(--text);}
+.btn-whatsapp{background:var(--green);color:#fff;}
+.btn-whatsapp:active,.btn-copy:active{opacity:.8;}
+
+.empty-state{text-align:center;padding:24px 12px;color:var(--muted);font-size:.88rem;}
+.empty-state span{font-size:2rem;display:block;margin-bottom:8px;}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:8px 0 calc(var(--safe-bot) + 4px);z-index:100;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;border:none;background:none;}
+.nav-item .ni-icon{font-size:1.4rem;}
+.nav-item .ni-label{font-size:.62rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+.nav-item.active .ni-label{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <h1>&#127925; Repertório</h1>
+  <p>Monte e envie pro WhatsApp</p>
+</div>
+
+<div class="card">
+  <span class="lbl">Saudação</span>
+  <input type="text" id="greeting">
+  <div class="day-row">
+    <div>
+      <span class="lbl" style="margin-top:10px">Dia da semana</span>
+      <select id="weekday">
+        <option>domingo</option><option>segunda-feira</option><option>terça-feira</option>
+        <option>quarta-feira</option><option>quinta-feira</option>
+        <option>sexta-feira</option><option>sábado</option>
+      </select>
+    </div>
+    <div>
+      <span class="lbl" style="margin-top:10px">Período</span>
+      <select id="period">
+        <option>à noite</option><option>de manhã</option><option>à tarde</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <span class="lbl">Músicas</span>
+  <div id="songs-list"></div>
+  <button class="add-btn" id="add-btn">+ Adicionar música</button>
+</div>
+
+<div class="card">
+  <div class="preview-header">
+    <span class="lbl" style="margin:0">Prévia</span>
+  </div>
+  <div id="preview-box"></div>
+  <div class="action-row">
+    <button class="action-btn btn-copy" id="copy-btn">&#128203; Copiar</button>
+    <button class="action-btn btn-whatsapp" id="wa-btn">&#128172; WhatsApp</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-item" onclick="window.location.href='index.html'"><span class="ni-icon">&#127968;</span><span class="ni-label">Início</span></button>
+  <button class="nav-item active"><span class="ni-icon">&#127925;</span><span class="ni-label">Repertório</span></button>
+  <button class="nav-item" onclick="window.location.href='cifras.html'"><span class="ni-icon">&#128195;</span><span class="ni-label">Cifras</span></button>
+  <button class="nav-item" onclick="window.location.href='config.html'"><span class="ni-icon">&#9881;</span><span class="ni-label">Config</span></button>
+</nav>
+
+<script>
+(function(){
+try{if(localStorage.getItem('theme')==='light')document.body.classList.add('light');}catch(e){}
+
+// Load saved greeting
+var greetingEl=document.getElementById('greeting');
+try{var dg=localStorage.getItem('default_greeting');greetingEl.value=dg||'Bom dia pessoal! \uD83D\uDE4C';}catch(e){greetingEl.value='Bom dia pessoal! \uD83D\uDE4C';}
+
+var TONES=['','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','Cm','C#m','Dm','D#m','Em','Fm','F#m','Gm','G#m','Am','A#m','Bm'];
+
+var DC=[
+  {d:'Clamo Jesus - Paulo Cesar Baruk (E)',n:'Clamo Jesus',t:'E',u:'https://drive.google.com/file/d/1e4oPhwrr0iRijfA18GMGKphQ-aN9l6Ro/view'},
+  {d:'Meu Tributo (A)',n:'Meu Tributo',t:'A',u:'https://drive.google.com/file/d/1_sl4hdPWmCtzIG3iEQOZWeuvkz7mdqK5/view'},
+  {d:'Vida Aos Sepulcros',n:'Vida Aos Sepulcros',t:'',u:'https://drive.google.com/file/d/1Cud9hUtbso1Pj-AT9O6763kki_12WTca/view'},
+  {d:'Teu Amor Não Falha',n:'Teu Amor Não Falha',t:'',u:'https://drive.google.com/file/d/1oGeshGf8H8kJwO-GzW3Akkk6Vp5I0Iqo/view'},
+  {d:'Gratidão - Bruna Olly (E)',n:'Gratidão',t:'E',u:'https://drive.google.com/file/d/1nkuF1yLAchruDwMcR8emsUOMwlWYGAt6/view'},
+  {d:'Um Novo Dia - Get Worship (A)',n:'Um Novo Dia',t:'A',u:'https://drive.google.com/file/d/1c-HcGaBeKPK-ObYzNMuM6KQKNLYSXVDt/view'},
+  {d:'Quebrantado - Morada/Vineyard (B)',n:'Quebrantado',t:'B',u:'https://drive.google.com/file/d/17r_isaSE5UhkGoSNTOgnR8mKEsQ9A5f3/view'},
+  {d:'Bondade de Deus',n:'Bondade de Deus',t:'',u:'https://drive.google.com/file/d/1LnPdZfbYId8SrvSGpTmnn2P-qZaKxVBp/view'},
+  {d:'Tu és Deus (A Ele) Tom Alt (A)',n:'Tu és Deus (A Ele)',t:'A',u:'https://drive.google.com/file/d/1Gc3VLc-T5A4MO_tQBLJBhNbhrRXpgoak/view'},
+  {d:'Pai Nosso - Pedras Vivas',n:'Pai Nosso',t:'',u:'https://drive.google.com/file/d/1AcH5ztamRy3BtOV6B2ceBnXCskg6R4LT/view'},
+  {d:'Jeová Jireh - Aline Barros',n:'Jeová Jireh',t:'',u:'https://drive.google.com/file/d/1fm0l8Tgtl-VnzSADfuhNFfU80Mv8-84S/view'},
+  {d:'Rei do Meu Coração',n:'Rei do Meu Coração',t:'',u:'https://drive.google.com/file/d/1S-3mbRap_baF_trOUeDslXxOn3Kz_IOQ/view'},
+  {d:'Teu Reino',n:'Teu Reino',t:'',u:'https://drive.google.com/file/d/1cE2torWq7KL6A31IRt7CshLXzl8tM4a2/view'},
+  {d:'Senhor Te Quero',n:'Senhor Te Quero',t:'',u:'https://drive.google.com/file/d/1LnoEaZDo6P0nF5TCpDuToY3XBZxgerb2/view'},
+  {d:'A Ele a Glória - Gabriela Rocha (G)',n:'A Ele a Glória',t:'G',u:'https://drive.google.com/file/d/1xypPc7eDqiKzXe6C8DtX9Fux4CYF8x7d/view'},
+  {d:'Não Seremos Abalados - Nívea Soares (D)',n:'Não Seremos Abalados',t:'D',u:'https://drive.google.com/file/d/1PVpoRBRlS_40uJgr_epoOD6mhUnGmUii/view'},
+  {d:'Santo Espírito - PC Baruk (E)',n:'Santo Espírito',t:'E',u:'https://drive.google.com/file/d/1OaX0RsuBqpxz5KoX8u1nEWEJhptqYam5/view'},
+  {d:'Todavia Me Alegrarei - Sarah Beatriz (G)',n:'Todavia Me Alegrarei',t:'G',u:'https://drive.google.com/file/d/1Z7kihQThOOHqcNIpkKavWOQszxcWLjE1/view'},
+  {d:'Leão e Cordeiro - Marcus Salles (B)',n:'Leão e Cordeiro',t:'B',u:'https://drive.google.com/file/d/1x8Vq2Vqhrj019d5pd-SAHWY4w09adXyq/view'},
+  {d:'Oh Quão Lindo Esse Nome É - Kemuel',n:'Oh Quão Lindo Esse Nome É',t:'',u:'https://drive.google.com/file/d/1JicYcmXasLpEzWx9PZCvqJATM1Ppcr2Y/view'},
+  {d:'Digno de Tudo - fhop music (D)',n:'Digno de Tudo',t:'D',u:'https://drive.google.com/file/d/1KPqzPKSIKsmLc7zK2Y9m1drjRXHU3rOJ/view'},
+  {d:'Digno É o Senhor',n:'Digno É o Senhor',t:'',u:'https://drive.google.com/file/d/18I0424XXYudJcVk1ad7vb9cjKcRqAT9J/view'},
+  {d:'Nosso Deus - Our God (C)',n:'Nosso Deus',t:'C',u:'https://drive.google.com/file/d/1ftggQO24NjjPMfSWC8-n9MhnvZ_50Dix/view'},
+  {d:'Grato Sou - O Canto das Igrejas (D)',n:'Grato Sou',t:'D',u:'https://drive.google.com/file/d/14mFEVJDT7jmUiUc9o_aIkw1D5uyH6eeG/view'},
+  {d:'Maravilhosa Graça - Drops',n:'Maravilhosa Graça',t:'',u:'https://drive.google.com/file/d/1HUBuy8gPo0uGUdchA5HqCM_3RNJQZRjU/view'},
+  {d:'Teu Santo Nome',n:'Teu Santo Nome',t:'',u:'https://drive.google.com/file/d/1bWU82R5giIlcYdRmA-9XePH1xj4PwFna/view'},
+  {d:'Vem - Versão Nova',n:'Vem',t:'',u:'https://drive.google.com/file/d/16LRFzHKT7K_PBnVdks5FNjmDFdGgcYS4/view'},
+  {d:'Tua Forte Mão - O Canto das Igrejas (F)',n:'Tua Forte Mão',t:'F',u:'https://drive.google.com/file/d/1p8NK1kX6haUGDa1B9VCB_Ky5FrnWz0tv/view'},
+];
+
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();}
+function search(q){
+  if(!q||q.length<2)return[];
+  var n=norm(q),ws=n.split(' ').filter(function(w){return w.length>=2;}),res=[];
+  if(!ws.length)return[];
+  for(var i=0;i<DC.length;i++){var c=DC[i],h=norm(c.d)+' '+norm(c.n),sc=0;for(var j=0;j<ws.length;j++)if(h.indexOf(ws[j])!==-1)sc++;if(sc>0)res.push({c:c,s:sc/ws.length});}
+  res.sort(function(a,b){return b.s-a.s;});
+  return res.slice(0,6).map(function(r){return r.c;});
+}
+function hl(text,q){
+  var ws=norm(q).split(' ').filter(function(w){return w.length>=2;}),r=text;
+  for(var i=0;i<ws.length;i++)r=r.replace(new RegExp('('+ws[i].replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<em>$1</em>');
+  return r;
+}
+
+var songs=[];
+function mk(tag,cls){var e=document.createElement(tag);if(cls)e.className=cls;return e;}
+function setTS(sel,tone){for(var i=0;i<sel.options.length;i++)if(sel.options[i].value===tone){sel.selectedIndex=i;return;}}
+function makeTS(idx){
+  var sel=mk('select','tone-sel');
+  for(var t=0;t<TONES.length;t++){var o=document.createElement('option');o.value=TONES[t];o.textContent=TONES[t]||'\u2014';if(TONES[t]===songs[idx].tone)o.selected=true;sel.appendChild(o);}
+  (function(i,s){s.onchange=function(){songs[i].tone=s.value;up();};})(idx,sel);
+  return sel;
+}
+function closeAC(){var l=document.querySelectorAll('.autocomplete-list');for(var i=0;i<l.length;i++)if(l[i].parentNode)l[i].parentNode.removeChild(l[i]);}
+function showAC(idx,matches,nw,ni,ts,ci,cb,vs,card){
+  closeAC();if(!matches.length)return;
+  var list=mk('div','autocomplete-list'),hdr=mk('div','ac-header');hdr.textContent=matches.length+' cifra(s) no Drive';list.appendChild(hdr);
+  for(var m=0;m<matches.length;m++){(function(c){
+    var item=mk('div','ac-item'),nd=mk('div','ac-name');nd.innerHTML=hl(c.d,ni.value);
+    var md=mk('div','ac-meta');md.innerHTML='<span style="color:var(--text)">'+c.n+'</span>';
+    if(c.t){var tt=mk('span','tag tag-tom');tt.textContent='Tom: '+c.t;md.appendChild(tt);}
+    var ct=mk('span','tag tag-cifra');ct.textContent='\u266B Cifra';md.appendChild(ct);
+    item.appendChild(nd);item.appendChild(md);
+    item.onmousedown=function(e){
+      e.preventDefault();
+      songs[idx].name=c.n;ni.value=c.n;
+      if(c.t){songs[idx].tone=c.t;setTS(ts,c.t);}
+      songs[idx].cifraUrl=c.u;ci.value=c.u;ci.className='cifra-inp found';
+      cb.className='badge-pill cifra-pill found';cb.textContent='\u266B Cifra';
+      updateCardClass(card,songs[idx]);
+      closeAC();up();
+    };
+    list.appendChild(item);
+  })(matches[m]);}
+  nw.appendChild(list);
+}
+
+function updateCardClass(card,s){
+  var cls='song-card';
+  if(s.cifraUrl)cls+=' has-cifra';
+  if(s.vsUrl)cls+=' has-vs';
+  card.className=cls;
+}
+
+var timers={};
+function render(){
+  var list=document.getElementById('songs-list');list.innerHTML='';
+  if(!songs.length){var e=mk('div','empty-state');e.innerHTML='<span>&#127925;</span>Adicione músicas ao repertório';list.appendChild(e);up();return;}
+  for(var i=0;i<songs.length;i++){(function(idx){
+    var s=songs[idx];
+    var card=mk('div','song-card');updateCardClass(card,s);
+
+    // Header
+    var hdr=mk('div','song-header');
+    var num=mk('span','song-num');num.textContent='Música '+(idx+1);
+    var rm=mk('button','rm-btn');rm.textContent='\u2715 Remover';
+    rm.onmousedown=function(e){e.preventDefault();};
+    rm.onclick=(function(i){return function(){songs.splice(i,1);render();};})(idx);
+    hdr.appendChild(num);hdr.appendChild(rm);card.appendChild(hdr);
+
+    // Row 1: name + tone
+    var row1=mk('div','song-row1');
+    var nw=mk('div','name-wrap');
+    var ni=document.createElement('input');ni.type='text';ni.className='name-inp';ni.placeholder='Nome da música';ni.value=s.name;
+    nw.appendChild(ni);
+    var ts=makeTS(idx);
+    row1.appendChild(nw);row1.appendChild(ts);card.appendChild(row1);
+
+    // Row 2: YouTube
+    var lr=mk('div','link-row');
+    var yb=mk('span','badge-pill yt-pill');yb.textContent='\u25b6 YT';
+    var li=document.createElement('input');li.type='text';li.placeholder='Link do YouTube';li.value=s.link;
+    lr.appendChild(yb);lr.appendChild(li);card.appendChild(lr);
+
+    // Row 3: VS (Virtual Sound)
+    var vsr=mk('div','link-row');
+    var vsb=mk('span','badge-pill vs-pill');vsb.textContent='\uD83C\uDFB9 VS';
+    var vsi=document.createElement('input');vsi.type='text';vsi.placeholder='Link do VS (opcional)';vsi.value=s.vsUrl||'';
+    vsr.appendChild(vsb);vsr.appendChild(vsi);card.appendChild(vsr);
+
+    // Row 4: Cifra
+    var cr=mk('div','link-row');
+    var cb=mk('span','badge-pill cifra-pill');
+    var ci=document.createElement('input');ci.type='text';ci.placeholder='Link da cifra (Drive)';
+    if(s.cifraUrl){cb.className='badge-pill cifra-pill found';cb.textContent='\u266B Cifra';ci.className='cifra-inp found';ci.value=s.cifraUrl;}
+    else{cb.className='badge-pill cifra-pill none';cb.textContent='Cifra';ci.className='cifra-inp empty';ci.value='';}
+    cr.appendChild(cb);cr.appendChild(ci);card.appendChild(cr);
+
+    // Row 5: Observação
+    var obs=document.createElement('input');obs.type='text';obs.className='obs-inp'+(s.obs?' has-text':'');
+    obs.placeholder='Observação (ex: versão acústica, começa no refrão...)';obs.value=s.obs||'';
+    card.appendChild(obs);
+
+    // Events
+    ni.oninput=(function(i,ni2,nw2,ts2,ci2,cb2,vs2,c){return function(){
+      songs[i].name=ni2.value;songs[i].cifraUrl='';
+      ci2.value='';ci2.className='cifra-inp empty';cb2.className='badge-pill cifra-pill none';cb2.textContent='Cifra';
+      c.className='song-card';
+      if(timers[i])clearTimeout(timers[i]);
+      timers[i]=setTimeout(function(){showAC(i,search(ni2.value),nw2,ni2,ts2,ci2,cb2,vs2,c);},250);
+      up();
+    };})(idx,ni,nw,ts,ci,cb,vsi,card);
+    ni.onfocus=(function(i,ni2,nw2,ts2,ci2,cb2,vs2,c){return function(){if(ni2.value.length>=2)showAC(i,search(ni2.value),nw2,ni2,ts2,ci2,cb2,vs2,c);};})(idx,ni,nw,ts,ci,cb,vsi,card);
+    ni.onblur=function(){setTimeout(closeAC,150);};
+    li.oninput=(function(i,l){return function(){songs[i].link=l.value;up();};})(idx,li);
+    vsi.oninput=(function(i,v,c){return function(){songs[i].vsUrl=v.value;updateCardClass(c,songs[i]);up();};})(idx,vsi,card);
+    ci.oninput=(function(i,ci2,cb2,c){return function(){
+      songs[i].cifraUrl=ci2.value;
+      if(ci2.value){ci2.className='cifra-inp found';cb2.className='badge-pill cifra-pill found';cb2.textContent='\u266B Cifra';}
+      else{ci2.className='cifra-inp empty';cb2.className='badge-pill cifra-pill none';cb2.textContent='Cifra';}
+      updateCardClass(c,songs[i]);up();
+    };})(idx,ci,cb,card);
+    obs.oninput=(function(i,o){return function(){songs[i].obs=o.value;o.className='obs-inp'+(o.value?' has-text':'');up();};})(idx,obs);
+
+    list.appendChild(card);
+  })(i);}
+  up();
+}
+
+function buildMsg(){
+  var g=document.getElementById('greeting').value.trim();
+  var w=document.getElementById('weekday').value;
+  var p=document.getElementById('period').value;
+  var msg=g+'\n'+'Segue o repertório de '+w+' '+p+':\n';
+  for(var i=0;i<songs.length;i++){
+    var s=songs[i];
+    if(s.name||s.link){
+      var t=s.tone?' \u2013 '+s.tone:'';
+      msg+='\n\uD83C\uDFB5 '+s.name+t+'\n'+s.link;
+      if(s.vsUrl)msg+='\n\uD83C\uDFB9 VS: '+s.vsUrl;
+      if(s.cifraUrl)msg+='\n\uD83D\uDCCB Cifra: '+s.cifraUrl;
+      if(s.obs)msg+='\n\uD83D\uDCAC '+s.obs;
+    }
+  }
+  return msg;
+}
+function up(){document.getElementById('preview-box').textContent=buildMsg();}
+
+document.getElementById('add-btn').onclick=function(){
+  songs.push({name:'',tone:'',link:'',vsUrl:'',cifraUrl:'',obs:''});
+  render();
+  setTimeout(function(){var inp=document.querySelectorAll('.name-inp');if(inp.length)inp[inp.length-1].focus();},50);
+};
+
+// Copy button
+document.getElementById('copy-btn').onclick=function(){
+  var btn=this,msg=buildMsg();
+  function ok(){btn.textContent='\u2705 Copiado!';setTimeout(function(){btn.innerHTML='&#128203; Copiar';},2000);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(ok).catch(fb);}else{fb();}
+  function fb(){var ta=document.createElement('textarea');ta.value=msg;ta.style.cssText='position:fixed;top:0;left:0;opacity:0.01;width:1px;height:1px';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');ok();}catch(e){}document.body.removeChild(ta);}
+};
+
+// WhatsApp button
+document.getElementById('wa-btn').onclick=function(){
+  var msg=buildMsg();
+  var encoded=encodeURIComponent(msg);
+  window.open('https://wa.me/?text='+encoded,'_blank');
+};
+
+['greeting','weekday','period'].forEach(function(id){var el=document.getElementById(id);el.oninput=up;el.onchange=up;});
+document.addEventListener('click',function(e){if(!e.target.closest||!e.target.closest('.name-wrap'))closeAC();});
+
+render();
+})();
+</script>
+</body>
+</html>
