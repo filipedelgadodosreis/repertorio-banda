@@ -13,35 +13,42 @@
 body.light{--bg:#f5f5f0;--surface:#ffffff;--surface2:#f0ede8;--accent:#d4a017;--text:#1a1a22;--muted:#888;--border:#ddd;}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;min-height:100vh;padding:calc(var(--safe-top) + 16px) 16px calc(var(--safe-bot) + 100px);}
 
-.header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .header h1{font-size:1.4rem;font-weight:800;color:var(--accent);flex:1;}
-.badge{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:.8rem;font-weight:700;color:var(--accent);}
-.badge span{color:var(--muted);font-weight:400;}
+.count-badge{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:.8rem;font-weight:700;color:var(--accent);white-space:nowrap;}
+.count-badge span{color:var(--muted);font-weight:400;}
 
-.search-wrap{position:relative;margin-bottom:16px;}
-.search-inp{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:.95rem;padding:11px 16px 11px 40px;outline:none;-webkit-appearance:none;}
+.sync-bar{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:14px;}
+.sync-status{flex:1;font-size:.8rem;color:var(--muted);}
+.sync-status.ok{color:var(--green);}
+.sync-status.err{color:#e05555;}
+.sync-status.loading{color:var(--accent);}
+.sync-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.78rem;font-weight:600;padding:6px 12px;cursor:pointer;white-space:nowrap;}
+.sync-btn:active{opacity:.7;}
+.spin{display:inline-block;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.search-wrap{position:relative;margin-bottom:12px;}
+.search-inp{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:.92rem;padding:10px 16px 10px 40px;outline:none;-webkit-appearance:none;}
 .search-inp:focus{border-color:var(--accent);}
 .search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--muted);pointer-events:none;}
 
-.filter-row{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;}
-.filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-family:inherit;font-size:.78rem;font-weight:600;padding:6px 14px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.filter-row{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;}
+.filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-family:inherit;font-size:.75rem;font-weight:600;padding:5px 13px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#1a1a22;}
 
-.cifra-list{display:flex;flex-direction:column;gap:10px;}
-.cifra-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;text-decoration:none;cursor:pointer;transition:border-color .15s;}
+.cifra-list{display:flex;flex-direction:column;gap:9px;}
+.cifra-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px;display:flex;align-items:center;gap:11px;text-decoration:none;transition:border-color .15s;}
 .cifra-card:active{border-color:var(--accent);}
-.cifra-icon{font-size:1.6rem;flex-shrink:0;}
+.cifra-icon{font-size:1.5rem;flex-shrink:0;}
 .cifra-info{flex:1;min-width:0;}
-.cifra-name{font-size:.92rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cifra-meta{font-size:.72rem;color:var(--muted);margin-top:3px;display:flex;gap:8px;align-items:center;}
-.tone-pill{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1px 7px;font-size:.68rem;font-weight:700;color:var(--accent);}
-.cifra-arrow{color:var(--muted);font-size:1rem;flex-shrink:0;}
+.cifra-name{font-size:.9rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cifra-meta{font-size:.7rem;color:var(--muted);margin-top:3px;display:flex;gap:6px;align-items:center;}
+.tone-pill{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1px 7px;font-size:.67rem;font-weight:700;color:var(--accent);}
+.cifra-arrow{color:var(--muted);font-size:1.1rem;flex-shrink:0;}
 
 .empty{text-align:center;padding:40px 16px;color:var(--muted);}
 .empty span{font-size:2.5rem;display:block;margin-bottom:8px;}
-
-.sync-btn{width:100%;background:transparent;border:1px dashed var(--border);border-radius:12px;color:var(--muted);font-family:inherit;font-size:.85rem;padding:12px;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px;}
-.sync-btn.syncing{color:var(--accent);border-color:var(--accent);}
 
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:8px 0 calc(var(--safe-bot) + 4px);z-index:100;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;border:none;background:none;}
@@ -54,7 +61,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 
 <div class="header">
   <h1>&#128195; Cifras</h1>
-  <div class="badge" id="count-badge">&#8226; <span>carregando...</span></div>
+  <div class="count-badge" id="count-badge">&#8729; <span>carregando</span></div>
+</div>
+
+<div class="sync-bar">
+  <div class="sync-status" id="sync-status">Aguardando sincronização...</div>
+  <button class="sync-btn" id="sync-btn">&#8635; Sincronizar</button>
 </div>
 
 <div class="search-wrap">
@@ -74,14 +86,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
   <button class="filter-btn" data-filter="sem-tom">Sem tom</button>
 </div>
 
-<button class="sync-btn" id="sync-btn">&#8635; Sincronizar com o Drive</button>
-
-<div class="cifra-list" id="cifra-list"></div>
+<div class="cifra-list" id="cifra-list">
+  <div class="empty"><span>&#128195;</span>Toque em Sincronizar para carregar as cifras</div>
+</div>
 
 <nav class="bottom-nav">
   <button class="nav-item" onclick="window.location.href='index.html'"><span class="ni-icon">&#127968;</span><span class="ni-label">Início</span></button>
   <button class="nav-item" onclick="window.location.href='repertorio.html'"><span class="ni-icon">&#127925;</span><span class="ni-label">Repertório</span></button>
-  <button class="nav-item active" onclick="window.location.href='cifras.html'"><span class="ni-icon">&#128195;</span><span class="ni-label">Cifras</span></button>
+  <button class="nav-item active"><span class="ni-icon">&#128195;</span><span class="ni-label">Cifras</span></button>
   <button class="nav-item" onclick="window.location.href='config.html'"><span class="ni-icon">&#9881;</span><span class="ni-label">Config</span></button>
 </nav>
 
@@ -89,115 +101,245 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 (function(){
 try{if(localStorage.getItem('theme')==='light')document.body.classList.add('light');}catch(e){}
 
-// Extract tone from filename
+var FOLDER_ID = '1ZMtPTV1j-4rGVdoNcl1aqfJBr8gPOPid';
+var API_KEY   = 'AIzaSyD-PLACEHOLDER'; // substitua pela sua API Key
+var CACHE_KEY = 'cifras_cache';
+var CACHE_TIME_KEY = 'cifras_cache_time';
+var CACHE_TTL = 60 * 60 * 1000; // 1 hora
+
+var allCifras = [];
+var currentFilter = 'all';
+var currentSearch = '';
+
 function extractTone(title){
-  var m=title.match(/[\.\s\(\-]([A-G]#?m?)[\.\s\)\-]/);
-  if(m)return m[1];
-  m=title.match(/\(([A-G]#?m?)\)/);
-  if(m)return m[1];
-  m=title.match(/\.([A-G]#?m?)\./);
-  if(m)return m[1];
+  var patterns = [/\(([A-G]#?b?m?)\)/g, /[\.\s\-]([A-G]#?b?m?)[\.\s\-]/g, /\.([A-G]#?b?m?)\./g];
+  for(var p=0;p<patterns.length;p++){
+    var m=patterns[p].exec(title);
+    if(m && /^[A-G]/.test(m[1])) return m[1];
+  }
   return '';
 }
 
 function cleanName(title){
   return title
-    .replace(/\.(pdf|docx|txt)$/i,'')
-    .replace(/[\.\-_]\d+COL(UNA)?/gi,'')
-    .replace(/\d+\s*COL(UNA)?/gi,'')
-    .replace(/\s*[\(\[]\d[\)\]]/g,'')
-    .replace(/\s*v\d+$/i,'')
-    .replace(/\s*[-–]\s*\d+\s*col(una)?/gi,'')
+    .replace(/\.(pdf|docx|txt|html)$/i,'')
+    .replace(/\s*[-–]\s*\d+\s*col(una)?s?\.?/gi,'')
+    .replace(/\s*\(\d+\s*col(una)?s?\)/gi,'')
+    .replace(/\s*\d+\s*col(una)?s?$/gi,'')
+    .replace(/\s*\([A-G]#?b?m?\)/g,'')
+    .replace(/\s*\bv\d+\b$/i,'')
+    .replace(/\.([A-G]#?b?m?)\.\d+/g,'')
     .replace(/\s+/g,' ').trim();
 }
 
-// Built-in cifras list (from Drive folder 1ZMtPTV1j-4rGVdoNcl1aqfJBr8gPOPid)
-var CIFRAS = [
-  {name:'Clamo Jesus - Paulo Cesar Baruk',tone:'E',url:'https://drive.google.com/file/d/1e4oPhwrr0iRijfA18GMGKphQ-aN9l6Ro/view'},
-  {name:'Meu Tributo',tone:'A',url:'https://drive.google.com/file/d/1_sl4hdPWmCtzIG3iEQOZWeuvkz7mdqK5/view'},
-  {name:'Vida Aos Sepulcros',tone:'',url:'https://drive.google.com/file/d/1Cud9hUtbso1Pj-AT9O6763kki_12WTca/view'},
-  {name:'Teu Amor Não Falha',tone:'',url:'https://drive.google.com/file/d/1oGeshGf8H8kJwO-GzW3Akkk6Vp5I0Iqo/view'},
-  {name:'Gratidão - Bruna Olly',tone:'E',url:'https://drive.google.com/file/d/1nkuF1yLAchruDwMcR8emsUOMwlWYGAt6/view'},
-  {name:'Um Novo Dia - Get Worship',tone:'A',url:'https://drive.google.com/file/d/1c-HcGaBeKPK-ObYzNMuM6KQKNLYSXVDt/view'},
-  {name:'Quebrantado - Morada / Vineyard',tone:'B',url:'https://drive.google.com/file/d/17r_isaSE5UhkGoSNTOgnR8mKEsQ9A5f3/view'},
-  {name:'Bondade de Deus',tone:'',url:'https://drive.google.com/file/d/1LnPdZfbYId8SrvSGpTmnn2P-qZaKxVBp/view'},
-  {name:'Tu és Deus (A Ele)',tone:'A',url:'https://drive.google.com/file/d/1Gc3VLc-T5A4MO_tQBLJBhNbhrRXpgoak/view'},
-  {name:'Pai Nosso - Pedras Vivas',tone:'',url:'https://drive.google.com/file/d/1AcH5ztamRy3BtOV6B2ceBnXCskg6R4LT/view'},
-  {name:'Jeová Jireh - Aline Barros',tone:'',url:'https://drive.google.com/file/d/1fm0l8Tgtl-VnzSADfuhNFfU80Mv8-84S/view'},
-  {name:'Rei do Meu Coração',tone:'',url:'https://drive.google.com/file/d/1S-3mbRap_baF_trOUeDslXxOn3Kz_IOQ/view'},
-  {name:'Teu Reino',tone:'',url:'https://drive.google.com/file/d/1cE2torWq7KL6A31IRt7CshLXzl8tM4a2/view'},
-  {name:'Senhor Te Quero',tone:'',url:'https://drive.google.com/file/d/1LnoEaZDo6P0nF5TCpDuToY3XBZxgerb2/view'},
-  {name:'A Ele a Glória - Gabriela Rocha',tone:'G',url:'https://drive.google.com/file/d/1xypPc7eDqiKzXe6C8DtX9Fux4CYF8x7d/view'},
-  {name:'Não Seremos Abalados - Nívea Soares',tone:'D',url:'https://drive.google.com/file/d/1PVpoRBRlS_40uJgr_epoOD6mhUnGmUii/view'},
-  {name:'Santo Espírito - PC Baruk',tone:'E',url:'https://drive.google.com/file/d/1OaX0RsuBqpxz5KoX8u1nEWEJhptqYam5/view'},
-  {name:'Todavia Me Alegrarei - Sarah Beatriz',tone:'G',url:'https://drive.google.com/file/d/1Z7kihQThOOHqcNIpkKavWOQszxcWLjE1/view'},
-  {name:'Leão e Cordeiro - Marcus Salles',tone:'B',url:'https://drive.google.com/file/d/1x8Vq2Vqhrj019d5pd-SAHWY4w09adXyq/view'},
-  {name:'Oh Quão Lindo Esse Nome É - Kemuel',tone:'',url:'https://drive.google.com/file/d/1JicYcmXasLpEzWx9PZCvqJATM1Ppcr2Y/view'},
-  {name:'Digno de Tudo - fhop music',tone:'D',url:'https://drive.google.com/file/d/1KPqzPKSIKsmLc7zK2Y9m1drjRXHU3rOJ/view'},
-  {name:'Digno É o Senhor',tone:'',url:'https://drive.google.com/file/d/18I0424XXYudJcVk1ad7vb9cjKcRqAT9J/view'},
-  {name:'Nosso Deus - Our God',tone:'C',url:'https://drive.google.com/file/d/1ftggQO24NjjPMfSWC8-n9MhnvZ_50Dix/view'},
-  {name:'Grato Sou - O Canto das Igrejas',tone:'D',url:'https://drive.google.com/file/d/14mFEVJDT7jmUiUc9o_aIkw1D5uyH6eeG/view'},
-  {name:'Maravilhosa Graça - Drops',tone:'',url:'https://drive.google.com/file/d/1HUBuy8gPo0uGUdchA5HqCM_3RNJQZRjU/view'},
-  {name:'Teu Santo Nome',tone:'',url:'https://drive.google.com/file/d/1bWU82R5giIlcYdRmA-9XePH1xj4PwFna/view'},
-  {name:'Vem - Versão Nova',tone:'',url:'https://drive.google.com/file/d/16LRFzHKT7K_PBnVdks5FNjmDFdGgcYS4/view'},
-  {name:'Tua Forte Mão - O Canto das Igrejas',tone:'F',url:'https://drive.google.com/file/d/1p8NK1kX6haUGDa1B9VCB_Ky5FrnWz0tv/view'},
-];
+function fileIcon(mime){
+  if(mime==='application/pdf') return '&#128196;';
+  if(mime && mime.includes('word')) return '&#128196;';
+  return '&#127925;';
+}
 
-// Sort alphabetically
-CIFRAS.sort(function(a,b){return a.name.localeCompare(b.name,'pt');});
+// Fetch from Google Drive API
+function fetchFromDrive(callback){
+  var url = 'https://www.googleapis.com/drive/v3/files'
+    + '?q=' + encodeURIComponent("'" + FOLDER_ID + "' in parents and trashed=false")
+    + '&fields=files(id,name,mimeType,webViewLink)'
+    + '&pageSize=200'
+    + '&key=' + API_KEY;
 
-var currentFilter='all';
-var currentSearch='';
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.onload = function(){
+    if(xhr.status === 200){
+      try{
+        var data = JSON.parse(xhr.responseText);
+        var files = (data.files||[]).filter(function(f){
+          return f.mimeType !== 'application/vnd.google-apps.folder'
+            && !/\.html?$/i.test(f.name);
+        });
+        var cifras = files.map(function(f){
+          return {
+            name: cleanName(f.name),
+            tone: extractTone(f.name),
+            url: 'https://drive.google.com/file/d/'+f.id+'/view',
+            mime: f.mimeType
+          };
+        });
+        cifras.sort(function(a,b){return a.name.localeCompare(b.name,'pt');});
+        callback(null, cifras);
+      }catch(e){ callback('Erro ao processar resposta'); }
+    } else if(xhr.status === 400 || xhr.status === 403){
+      callback('api_key_invalid');
+    } else {
+      callback('Erro '+xhr.status);
+    }
+  };
+  xhr.onerror = function(){ callback('Sem conexão'); };
+  xhr.send();
+}
 
-function fileIcon(tone){return tone?'&#127925;':'&#128196;';}
+function setStatus(msg, cls){
+  var el = document.getElementById('sync-status');
+  el.textContent = msg;
+  el.className = 'sync-status' + (cls ? ' '+cls : '');
+}
+
+function saveCache(cifras){
+  try{
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cifras));
+    localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+  }catch(e){}
+}
+
+function loadCache(){
+  try{
+    var t = parseInt(localStorage.getItem(CACHE_TIME_KEY)||'0');
+    if(Date.now()-t < CACHE_TTL){
+      var d = localStorage.getItem(CACHE_KEY);
+      if(d) return JSON.parse(d);
+    }
+  }catch(e){}
+  return null;
+}
+
+function formatTime(ts){
+  var d = new Date(parseInt(ts));
+  return d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
 
 function render(){
-  var filtered=CIFRAS.filter(function(c){
-    var matchSearch=!currentSearch||c.name.toLowerCase().includes(currentSearch.toLowerCase());
-    var matchFilter=currentFilter==='all'||(currentFilter==='sem-tom'&&!c.tone)||(c.tone&&c.tone.startsWith(currentFilter));
-    return matchSearch&&matchFilter;
+  var filtered = allCifras.filter(function(c){
+    var ms = !currentSearch || c.name.toLowerCase().indexOf(currentSearch.toLowerCase())!==-1;
+    var mf = currentFilter==='all'
+      || (currentFilter==='sem-tom' && !c.tone)
+      || (c.tone && c.tone.replace('m','').charAt(0)===currentFilter);
+    return ms && mf;
   });
 
-  var list=document.getElementById('cifra-list');
-  list.innerHTML='';
+  var badge = document.getElementById('count-badge');
+  if(currentSearch || currentFilter!=='all'){
+    badge.innerHTML = '<strong>'+filtered.length+'</strong> <span>de '+allCifras.length+'</span>';
+  } else {
+    badge.innerHTML = '<strong>'+allCifras.length+'</strong> <span>cifras</span>';
+  }
 
-  // Update count
-  var badge=document.getElementById('count-badge');
-  badge.innerHTML='<strong>'+CIFRAS.length+'</strong> <span>cifras</span>';
-  if(currentSearch||currentFilter!=='all') badge.innerHTML='<strong>'+filtered.length+'</strong> <span>de '+CIFRAS.length+'</span>';
+  var list = document.getElementById('cifra-list');
+  list.innerHTML = '';
 
   if(!filtered.length){
-    list.innerHTML='<div class="empty"><span>&#128195;</span>Nenhuma cifra encontrada</div>';
+    list.innerHTML = '<div class="empty"><span>&#128195;</span>Nenhuma cifra encontrada</div>';
     return;
   }
 
   filtered.forEach(function(c){
-    var card=document.createElement('a');
-    card.className='cifra-card';
-    card.href=c.url;
-    card.target='_blank';
-    card.rel='noopener';
-    var icon=document.createElement('span');
-    icon.className='cifra-icon';
-    icon.innerHTML=c.tone?'&#127925;':'&#128196;';
-    var info=document.createElement('div');
-    info.className='cifra-info';
-    var nm=document.createElement('div');nm.className='cifra-name';nm.textContent=c.name;
-    var meta=document.createElement('div');meta.className='cifra-meta';
-    if(c.tone){var tp=document.createElement('span');tp.className='tone-pill';tp.textContent=c.tone;meta.appendChild(tp);}
-    else{meta.textContent='Sem tom identificado';}
-    info.appendChild(nm);info.appendChild(meta);
-    var arr=document.createElement('span');arr.className='cifra-arrow';arr.innerHTML='&#8250;';
-    card.appendChild(icon);card.appendChild(info);card.appendChild(arr);
+    var card = document.createElement('a');
+    card.className = 'cifra-card';
+    card.href = c.url;
+    card.target = '_blank';
+    card.rel = 'noopener';
+
+    var icon = document.createElement('span');
+    icon.className = 'cifra-icon';
+    icon.innerHTML = fileIcon(c.mime);
+
+    var info = document.createElement('div');
+    info.className = 'cifra-info';
+
+    var nm = document.createElement('div');
+    nm.className = 'cifra-name';
+    nm.textContent = c.name;
+
+    var meta = document.createElement('div');
+    meta.className = 'cifra-meta';
+    if(c.tone){
+      var tp = document.createElement('span');
+      tp.className = 'tone-pill';
+      tp.textContent = c.tone;
+      meta.appendChild(tp);
+    } else {
+      meta.textContent = 'Sem tom identificado';
+    }
+
+    info.appendChild(nm);
+    info.appendChild(meta);
+
+    var arr = document.createElement('span');
+    arr.className = 'cifra-arrow';
+    arr.innerHTML = '&#8250;';
+
+    card.appendChild(icon);
+    card.appendChild(info);
+    card.appendChild(arr);
     list.appendChild(card);
   });
 }
 
-// Search
-document.getElementById('search-inp').oninput=function(){currentSearch=this.value;render();};
+function sync(force){
+  var btn = document.getElementById('sync-btn');
+  btn.innerHTML = '<span class="spin">&#8635;</span> Buscando...';
+  btn.disabled = true;
+  setStatus('Buscando cifras no Drive...', 'loading');
 
-// Filters
-document.getElementById('filter-row').onclick=function(e){
+  fetchFromDrive(function(err, cifras){
+    btn.innerHTML = '&#8635; Sincronizar';
+    btn.disabled = false;
+    if(err === 'api_key_invalid'){
+      // Fallback: try without API key using public folder endpoint
+      fetchPublic(function(err2, cifras2){
+        if(err2){
+          setStatus('Configure a API Key para sincronizar', 'err');
+        } else {
+          allCifras = cifras2;
+          saveCache(cifras2);
+          try{ var t=localStorage.getItem(CACHE_TIME_KEY); setStatus('\u2713 '+cifras2.length+' cifras \u2013 '+formatTime(t), 'ok'); }catch(e){}
+          render();
+        }
+      });
+      return;
+    }
+    if(err){
+      setStatus('Erro: '+err, 'err');
+      return;
+    }
+    allCifras = cifras;
+    saveCache(cifras);
+    try{ var t=localStorage.getItem(CACHE_TIME_KEY); setStatus('\u2713 '+cifras.length+' cifras \u2013 '+formatTime(t), 'ok'); }catch(e){}
+    render();
+  });
+}
+
+// Public folder listing (no API key - uses gdrive export trick)
+function fetchPublic(callback){
+  // Use the Drive folder RSS/JSON export that works for public folders
+  var url = 'https://corsproxy.io/?url=' + encodeURIComponent(
+    'https://www.googleapis.com/drive/v3/files'
+    + '?q=' + encodeURIComponent("'" + FOLDER_ID + "' in parents and trashed=false")
+    + '&fields=files(id,name,mimeType)'
+    + '&pageSize=200'
+    + '&supportsAllDrives=true'
+  );
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.onload = function(){
+    try{
+      var data = JSON.parse(xhr.responseText);
+      if(!data.files){ callback('sem arquivos'); return; }
+      var files = data.files.filter(function(f){
+        return f.mimeType!=='application/vnd.google-apps.folder' && !/\.html?$/i.test(f.name);
+      });
+      var cifras = files.map(function(f){
+        return {name:cleanName(f.name), tone:extractTone(f.name), url:'https://drive.google.com/file/d/'+f.id+'/view', mime:f.mimeType};
+      });
+      cifras.sort(function(a,b){return a.name.localeCompare(b.name,'pt');});
+      callback(null, cifras);
+    }catch(e){ callback('parse error'); }
+  };
+  xhr.onerror = function(){ callback('network error'); };
+  xhr.send();
+}
+
+// Init
+document.getElementById('search-inp').oninput = function(){currentSearch=this.value;render();};
+document.getElementById('filter-row').onclick = function(e){
   var btn=e.target.closest('.filter-btn');
   if(!btn)return;
   document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
@@ -205,16 +347,20 @@ document.getElementById('filter-row').onclick=function(e){
   currentFilter=btn.dataset.filter;
   render();
 };
+document.getElementById('sync-btn').onclick = function(){sync(true);};
 
-// Sync button (shows info for now — API key needed)
-document.getElementById('sync-btn').onclick=function(){
-  var btn=document.getElementById('sync-btn');
-  btn.classList.add('syncing');
-  btn.textContent='&#8635; Configure a API Key em Config para sincronizar automaticamente';
-  setTimeout(function(){btn.classList.remove('syncing');btn.innerHTML='&#8635; Sincronizar com o Drive';},3000);
-};
+// Load cache first, then auto-sync
+var cached = loadCache();
+if(cached && cached.length){
+  allCifras = cached;
+  try{ var t=localStorage.getItem(CACHE_TIME_KEY); setStatus('\u2713 '+cached.length+' cifras (cache de '+formatTime(t)+')', 'ok'); }catch(e){}
+  render();
+  // Auto-refresh in background after 5s
+  setTimeout(function(){sync(false);}, 5000);
+} else {
+  sync(true);
+}
 
-render();
 })();
 </script>
 </body>
