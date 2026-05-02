@@ -9,24 +9,28 @@
 <title>Cifras</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-:root{--bg:#0f0f13;--surface:#1a1a22;--surface2:#23232f;--accent:#f5c842;--text:#f0ede8;--muted:#7a7a8c;--border:#2e2e3e;--green:#25D366;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);}
+:root{--bg:#0f0f13;--surface:#1a1a22;--surface2:#23232f;--accent:#f5c842;--text:#f0ede8;--muted:#7a7a8c;--border:#2e2e3e;--green:#25D366;--blue:#4a9eff;--safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);}
 body.light{--bg:#f5f5f0;--surface:#ffffff;--surface2:#f0ede8;--accent:#d4a017;--text:#1a1a22;--muted:#888;--border:#ddd;}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;min-height:100vh;padding:calc(var(--safe-top) + 16px) 16px calc(var(--safe-bot) + 100px);}
 
 .header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .header h1{font-size:1.4rem;font-weight:800;color:var(--accent);flex:1;}
 .count-badge{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:.8rem;font-weight:700;color:var(--accent);white-space:nowrap;}
-.count-badge span{color:var(--muted);font-weight:400;}
 
 .sync-bar{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:14px;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+.sync-dot.ok{background:var(--green);}
+.sync-dot.loading{background:var(--accent);animation:pulse 1s infinite;}
+.sync-dot.err{background:#e05555;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .sync-status{flex:1;font-size:.8rem;color:var(--muted);}
-.sync-status.ok{color:var(--green);}
-.sync-status.err{color:#e05555;}
-.sync-status.loading{color:var(--accent);}
-.sync-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.78rem;font-weight:600;padding:6px 12px;cursor:pointer;white-space:nowrap;}
+.sync-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.78rem;font-weight:600;padding:6px 12px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .sync-btn:active{opacity:.7;}
-.spin{display:inline-block;animation:spin 1s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Tabs */
+.tabs{display:flex;gap:8px;margin-bottom:14px;}
+.tab{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--muted);font-family:inherit;font-size:.82rem;font-weight:600;padding:9px;cursor:pointer;text-align:center;}
+.tab.active{background:var(--accent);border-color:var(--accent);color:#1a1a22;}
 
 .search-wrap{position:relative;margin-bottom:12px;}
 .search-inp{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:.92rem;padding:10px 16px 10px 40px;outline:none;-webkit-appearance:none;}
@@ -37,15 +41,24 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 .filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-family:inherit;font-size:.75rem;font-weight:600;padding:5px 13px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
 .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#1a1a22;}
 
-.cifra-list{display:flex;flex-direction:column;gap:9px;}
-.cifra-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px;display:flex;align-items:center;gap:11px;text-decoration:none;transition:border-color .15s;}
-.cifra-card:active{border-color:var(--accent);}
-.cifra-icon{font-size:1.5rem;flex-shrink:0;}
-.cifra-info{flex:1;min-width:0;}
-.cifra-name{font-size:.9rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cifra-meta{font-size:.7rem;color:var(--muted);margin-top:3px;display:flex;gap:6px;align-items:center;}
+.item-list{display:flex;flex-direction:column;gap:9px;}
+.item-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px;display:flex;align-items:center;gap:11px;text-decoration:none;transition:border-color .15s;}
+.item-card:active{border-color:var(--accent);}
+.item-card.vs-card{border-left:3px solid var(--blue);}
+.item-icon{font-size:1.5rem;flex-shrink:0;}
+.item-info{flex:1;min-width:0;}
+.item-name{font-size:.9rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-meta{font-size:.7rem;color:var(--muted);margin-top:3px;display:flex;gap:6px;align-items:center;}
 .tone-pill{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1px 7px;font-size:.67rem;font-weight:700;color:var(--accent);}
-.cifra-arrow{color:var(--muted);font-size:1.1rem;flex-shrink:0;}
+.vs-pill{background:#1a2a4a;border:1px solid #2a3a6a;border-radius:6px;padding:1px 7px;font-size:.67rem;font-weight:700;color:var(--blue);}
+.item-arrow{color:var(--muted);font-size:1.1rem;flex-shrink:0;}
+
+/* Tom editor */
+.tom-editor{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-top:6px;display:none;}
+.tom-editor.open{display:flex;align-items:center;gap:8px;}
+.tom-editor select{background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--accent);font-family:inherit;font-size:.85rem;font-weight:700;padding:5px 8px;outline:none;-webkit-appearance:none;}
+.tom-editor .save-tom{background:var(--accent);border:none;border-radius:8px;color:#1a1a22;font-family:inherit;font-size:.78rem;font-weight:700;padding:5px 12px;cursor:pointer;}
+.tom-editor label{font-size:.75rem;color:var(--muted);}
 
 .empty{text-align:center;padding:40px 16px;color:var(--muted);}
 .empty span{font-size:2.5rem;display:block;margin-bottom:8px;}
@@ -60,18 +73,25 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 <body>
 
 <div class="header">
-  <h1>&#128195; Cifras</h1>
-  <div class="count-badge" id="count-badge">&#8729; <span>carregando</span></div>
+  <h1>&#128195; Cifras & VS</h1>
+  <div class="count-badge" id="count-badge">&#8729; &#8729;</div>
 </div>
 
 <div class="sync-bar">
-  <div class="sync-status" id="sync-status">Aguardando sincronização...</div>
+  <div class="sync-dot" id="sync-dot"></div>
+  <div class="sync-status" id="sync-status">Aguardando...</div>
   <button class="sync-btn" id="sync-btn">&#8635; Sincronizar</button>
 </div>
 
-<div class="search-wrap">
+<div class="tabs">
+  <button class="tab active" id="tab-cifras" onclick="switchTab('cifras')">&#128196; Cifras</button>
+  <button class="tab" id="tab-vs" onclick="switchTab('vs')">&#127925; Virtual Sounds</button>
+  <button class="tab" id="tab-semtom" onclick="switchTab('semtom')">&#9998; Sem Tom</button>
+</div>
+
+<div class="search-wrap" id="search-wrap">
   <span class="search-icon">&#128269;</span>
-  <input class="search-inp" type="text" id="search-inp" placeholder="Buscar cifra...">
+  <input class="search-inp" type="text" id="search-inp" placeholder="Buscar...">
 </div>
 
 <div class="filter-row" id="filter-row">
@@ -83,11 +103,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
   <button class="filter-btn" data-filter="E">Tom E</button>
   <button class="filter-btn" data-filter="F">Tom F</button>
   <button class="filter-btn" data-filter="G">Tom G</button>
-  <button class="filter-btn" data-filter="sem-tom">Sem tom</button>
 </div>
 
-<div class="cifra-list" id="cifra-list">
-  <div class="empty"><span>&#128195;</span>Toque em Sincronizar para carregar as cifras</div>
+<div class="item-list" id="item-list">
+  <div class="empty"><span>&#128195;</span>Toque em Sincronizar para carregar</div>
 </div>
 
 <nav class="bottom-nav">
@@ -101,170 +120,304 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Helvetica
 (function(){
 try{if(localStorage.getItem('theme')==='light')document.body.classList.add('light');}catch(e){}
 
-var FOLDER_ID = '1ZMtPTV1j-4rGVdoNcl1aqfJBr8gPOPid';
-var API_KEY   = 'AIzaSyD-PLACEHOLDER'; // substitua pela sua API Key
-var CACHE_KEY = 'cifras_cache';
-var CACHE_TIME_KEY = 'cifras_cache_time';
-var CACHE_TTL = 60 * 60 * 1000; // 1 hora
+var FOLDER_CIFRAS = '1ZMtPTV1j-4rGVdoNcl1aqfJBr8gPOPid';
+var FOLDER_VS     = '12MtjNimoJrmmlaOrqzsvQynIYsK9Ehe0';
+var TONES = ['','C','C#','D','D#','E','F','F#','G','G#','A','A#','B','Cm','C#m','Dm','D#m','Em','Fm','F#m','Gm','G#m','Am','A#m','Bm'];
 
 var allCifras = [];
+var allVS     = [];
+var customToms = {}; // { fileId: 'E' }
+var currentTab    = 'cifras';
 var currentFilter = 'all';
 var currentSearch = '';
 
+// Load custom toms from localStorage
+try{ customToms = JSON.parse(localStorage.getItem('custom_toms')||'{}'); }catch(e){}
+
+function saveCustomToms(){ try{ localStorage.setItem('custom_toms', JSON.stringify(customToms)); }catch(e){} }
+
 function extractTone(title){
-  var patterns = [/\(([A-G]#?b?m?)\)/g, /[\.\s\-]([A-G]#?b?m?)[\.\s\-]/g, /\.([A-G]#?b?m?)\./g];
-  for(var p=0;p<patterns.length;p++){
-    var m=patterns[p].exec(title);
-    if(m && /^[A-G]/.test(m[1])) return m[1];
-  }
+  var m;
+  m = title.match(/\(([A-G]#?b?m?)\)/);
+  if(m && /^[A-G]/.test(m[1])) return m[1];
+  m = title.match(/[\.\s\-_]([A-G]#?b?m?)[\.\s\-_\d]/);
+  if(m && /^[A-G]/.test(m[1])) return m[1];
   return '';
 }
 
 function cleanName(title){
   return title
-    .replace(/\.(pdf|docx|txt|html)$/i,'')
+    .replace(/\.(pdf|docx|txt|html|mp3|wav|m4a|aac|ogg)$/i,'')
     .replace(/\s*[-–]\s*\d+\s*col(una)?s?\.?/gi,'')
     .replace(/\s*\(\d+\s*col(una)?s?\)/gi,'')
     .replace(/\s*\d+\s*col(una)?s?$/gi,'')
-    .replace(/\s*\([A-G]#?b?m?\)/g,'')
-    .replace(/\s*\bv\d+\b$/i,'')
-    .replace(/\.([A-G]#?b?m?)\.\d+/g,'')
+    .replace(/[\.\s]([A-G]#?b?m?)[\.\s]\d/g,'')
     .replace(/\s+/g,' ').trim();
 }
 
-function fileIcon(mime){
-  if(mime==='application/pdf') return '&#128196;';
-  if(mime && mime.includes('word')) return '&#128196;';
-  return '&#127925;';
+function dot(cls){
+  var d=document.getElementById('sync-dot');
+  d.className='sync-dot'+( cls?' '+cls:'');
+}
+function setStatus(msg){document.getElementById('sync-status').textContent=msg;}
+function updateBadge(){
+  var badge=document.getElementById('count-badge');
+  badge.innerHTML='&#128196; <strong>'+allCifras.length+'</strong> &nbsp;&#127925; <strong>'+allVS.length+'</strong>';
 }
 
-// Fetch from Google Drive API
-function fetchFromDrive(callback){
-  var url = 'https://www.googleapis.com/drive/v3/files'
-    + '?q=' + encodeURIComponent("'" + FOLDER_ID + "' in parents and trashed=false")
-    + '&fields=files(id,name,mimeType,webViewLink)'
-    + '&pageSize=200'
-    + '&key=' + API_KEY;
+// Fetch folder contents via public API (no key needed for public folders)
+function fetchFolder(folderId, callback){
+  var proxies = [
+    'https://corsproxy.io/?url=',
+    'https://api.allorigins.win/raw?url='
+  ];
+  var apiUrl = 'https://www.googleapis.com/drive/v3/files'
+    + '?q=' + encodeURIComponent("'" + folderId + "' in parents and trashed=false")
+    + '&fields=files(id,name,mimeType)'
+    + '&pageSize=200';
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url);
-  xhr.onload = function(){
-    if(xhr.status === 200){
+  function tryProxy(idx){
+    if(idx >= proxies.length){ callback('Falha em todos os proxies'); return; }
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', proxies[idx] + encodeURIComponent(apiUrl));
+    xhr.timeout = 10000;
+    xhr.onload = function(){
       try{
         var data = JSON.parse(xhr.responseText);
-        var files = (data.files||[]).filter(function(f){
-          return f.mimeType !== 'application/vnd.google-apps.folder'
-            && !/\.html?$/i.test(f.name);
-        });
-        var cifras = files.map(function(f){
-          return {
-            name: cleanName(f.name),
-            tone: extractTone(f.name),
-            url: 'https://drive.google.com/file/d/'+f.id+'/view',
-            mime: f.mimeType
-          };
-        });
-        cifras.sort(function(a,b){return a.name.localeCompare(b.name,'pt');});
-        callback(null, cifras);
-      }catch(e){ callback('Erro ao processar resposta'); }
-    } else if(xhr.status === 400 || xhr.status === 403){
-      callback('api_key_invalid');
-    } else {
-      callback('Erro '+xhr.status);
+        if(data.files){ callback(null, data.files); }
+        else{ tryProxy(idx+1); }
+      }catch(e){ tryProxy(idx+1); }
+    };
+    xhr.onerror = xhr.ontimeout = function(){ tryProxy(idx+1); };
+    xhr.send();
+  }
+  tryProxy(0);
+}
+
+function processFiles(files, type){
+  var skipMimes = ['application/vnd.google-apps.folder'];
+  var skipExt   = /\.html?$/i;
+  return files
+    .filter(function(f){ return skipMimes.indexOf(f.mimeType)===-1 && !skipExt.test(f.name); })
+    .map(function(f){
+      var tone = customToms[f.id] || extractTone(f.name);
+      return {
+        id:   f.id,
+        name: cleanName(f.name),
+        tone: tone,
+        mime: f.mimeType,
+        type: type,
+        url:  'https://drive.google.com/file/d/'+f.id+'/view'
+      };
+    })
+    .sort(function(a,b){ return a.name.localeCompare(b.name,'pt'); });
+}
+
+function sync(){
+  var btn = document.getElementById('sync-btn');
+  btn.textContent = '...';
+  btn.disabled = true;
+  dot('loading');
+  setStatus('Buscando no Drive...');
+
+  var done = 0;
+  var cifrasFiles = [], vsFiles = [], errs = [];
+
+  function check(){
+    done++;
+    if(done < 2) return;
+    btn.textContent = '↺ Sincronizar';
+    btn.disabled = false;
+    if(errs.length === 2){
+      dot('err');
+      setStatus('Sem conexão com o Drive');
+      return;
     }
-  };
-  xhr.onerror = function(){ callback('Sem conexão'); };
-  xhr.send();
-}
+    allCifras = processFiles(cifrasFiles, 'cifra');
+    allVS     = processFiles(vsFiles,     'vs');
+    // Save cache
+    try{
+      localStorage.setItem('cache_cifras', JSON.stringify(allCifras));
+      localStorage.setItem('cache_vs',     JSON.stringify(allVS));
+      localStorage.setItem('cache_time',   Date.now().toString());
+    }catch(e){}
+    updateBadge();
+    dot('ok');
+    var t = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    setStatus('\u2713 Atualizado às '+t+' · '+allCifras.length+' cifras, '+allVS.length+' VS');
+    render();
+  }
 
-function setStatus(msg, cls){
-  var el = document.getElementById('sync-status');
-  el.textContent = msg;
-  el.className = 'sync-status' + (cls ? ' '+cls : '');
-}
-
-function saveCache(cifras){
-  try{
-    localStorage.setItem(CACHE_KEY, JSON.stringify(cifras));
-    localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
-  }catch(e){}
+  fetchFolder(FOLDER_CIFRAS, function(err, files){
+    if(err){ errs.push(err); } else { cifrasFiles = files; }
+    check();
+  });
+  fetchFolder(FOLDER_VS, function(err, files){
+    if(err){ errs.push(err); } else { vsFiles = files; }
+    check();
+  });
 }
 
 function loadCache(){
   try{
-    var t = parseInt(localStorage.getItem(CACHE_TIME_KEY)||'0');
-    if(Date.now()-t < CACHE_TTL){
-      var d = localStorage.getItem(CACHE_KEY);
-      if(d) return JSON.parse(d);
+    var t = parseInt(localStorage.getItem('cache_time')||'0');
+    var age = Date.now() - t;
+    var c = JSON.parse(localStorage.getItem('cache_cifras')||'null');
+    var v = JSON.parse(localStorage.getItem('cache_vs')||'null');
+    if(c && v){
+      allCifras = c;
+      allVS     = v;
+      // Re-apply custom toms
+      allCifras.forEach(function(c){ if(customToms[c.id]) c.tone = customToms[c.id]; });
+      allVS.forEach(function(v){ if(customToms[v.id]) v.tone = customToms[v.id]; });
+      updateBadge();
+      dot('ok');
+      var mins = Math.floor(age/60000);
+      setStatus('\u2713 Cache de '+mins+'min · '+allCifras.length+' cifras, '+allVS.length+' VS');
+      render();
+      return true;
     }
   }catch(e){}
-  return null;
+  return false;
 }
 
-function formatTime(ts){
-  var d = new Date(parseInt(ts));
-  return d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+function switchTab(tab){
+  currentTab = tab;
+  currentFilter = 'all';
+  currentSearch = '';
+  document.getElementById('search-inp').value = '';
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelector('[data-filter="all"]').classList.add('active');
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('tab-'+tab).classList.add('active');
+  // Hide filters on VS and semtom tabs
+  var fr = document.getElementById('filter-row');
+  fr.style.display = (tab==='vs'||tab==='semtom') ? 'none' : 'flex';
+  render();
 }
 
 function render(){
-  var filtered = allCifras.filter(function(c){
-    var ms = !currentSearch || c.name.toLowerCase().indexOf(currentSearch.toLowerCase())!==-1;
-    var mf = currentFilter==='all'
-      || (currentFilter==='sem-tom' && !c.tone)
-      || (c.tone && c.tone.replace('m','').charAt(0)===currentFilter);
-    return ms && mf;
-  });
-
-  var badge = document.getElementById('count-badge');
-  if(currentSearch || currentFilter!=='all'){
-    badge.innerHTML = '<strong>'+filtered.length+'</strong> <span>de '+allCifras.length+'</span>';
-  } else {
-    badge.innerHTML = '<strong>'+allCifras.length+'</strong> <span>cifras</span>';
-  }
-
-  var list = document.getElementById('cifra-list');
+  var list = document.getElementById('item-list');
   list.innerHTML = '';
 
-  if(!filtered.length){
-    list.innerHTML = '<div class="empty"><span>&#128195;</span>Nenhuma cifra encontrada</div>';
+  var items;
+  if(currentTab === 'cifras'){
+    items = allCifras.filter(function(c){
+      var ms = !currentSearch || c.name.toLowerCase().indexOf(currentSearch.toLowerCase())!==-1;
+      var mf = currentFilter==='all' || (c.tone && c.tone.replace('m','').charAt(0)===currentFilter);
+      return ms && mf;
+    });
+  } else if(currentTab === 'vs'){
+    items = allVS.filter(function(v){
+      return !currentSearch || v.name.toLowerCase().indexOf(currentSearch.toLowerCase())!==-1;
+    });
+  } else { // semtom
+    items = allCifras.filter(function(c){
+      return !c.tone && (!currentSearch || c.name.toLowerCase().indexOf(currentSearch.toLowerCase())!==-1);
+    });
+  }
+
+  // Update badge
+  var badge = document.getElementById('count-badge');
+  if(currentTab==='semtom'){
+    badge.innerHTML = '<strong>'+items.length+'</strong> sem tom';
+  } else if(currentSearch || currentFilter!=='all'){
+    var total = currentTab==='cifras' ? allCifras.length : allVS.length;
+    badge.innerHTML = '<strong>'+items.length+'</strong> de '+total;
+  } else {
+    updateBadge();
+  }
+
+  if(!items.length){
+    var msg = currentTab==='vs' ? 'Nenhum VS encontrado' : currentTab==='semtom' ? 'Todas as cifras têm tom! ✅' : 'Nenhuma cifra encontrada';
+    list.innerHTML = '<div class="empty"><span>'+(currentTab==='vs'?'&#127925;':'&#128195;')+'</span>'+msg+'</div>';
     return;
   }
 
-  filtered.forEach(function(c){
-    var card = document.createElement('a');
-    card.className = 'cifra-card';
-    card.href = c.url;
-    card.target = '_blank';
-    card.rel = 'noopener';
+  items.forEach(function(item){
+    var isVS = item.type === 'vs';
+    var isSemTom = currentTab === 'semtom';
 
+    var card = document.createElement('div');
+    card.className = 'item-card' + (isVS ? ' vs-card' : '');
+
+    // Icon
     var icon = document.createElement('span');
-    icon.className = 'cifra-icon';
-    icon.innerHTML = fileIcon(c.mime);
+    icon.className = 'item-icon';
+    icon.innerHTML = isVS ? '&#127925;' : '&#128196;';
 
+    // Info
     var info = document.createElement('div');
-    info.className = 'cifra-info';
+    info.className = 'item-info';
 
     var nm = document.createElement('div');
-    nm.className = 'cifra-name';
-    nm.textContent = c.name;
+    nm.className = 'item-name';
+    nm.textContent = item.name;
 
     var meta = document.createElement('div');
-    meta.className = 'cifra-meta';
-    if(c.tone){
+    meta.className = 'item-meta';
+    if(item.tone){
       var tp = document.createElement('span');
-      tp.className = 'tone-pill';
-      tp.textContent = c.tone;
+      tp.className = isVS ? 'vs-pill' : 'tone-pill';
+      tp.textContent = isVS ? '🎹 '+item.tone : item.tone;
       meta.appendChild(tp);
-    } else {
-      meta.textContent = 'Sem tom identificado';
+    } else if(!isVS){
+      meta.textContent = 'Sem tom';
     }
+    if(isVS){ var vp=document.createElement('span');vp.className='vs-pill';vp.textContent='VS';meta.appendChild(vp); }
 
     info.appendChild(nm);
     info.appendChild(meta);
 
+    // Tom editor (only for semtom tab)
+    if(isSemTom){
+      var editor = document.createElement('div');
+      editor.className = 'tom-editor';
+      var lbl = document.createElement('label');
+      lbl.textContent = 'Tom:';
+      var sel = document.createElement('select');
+      TONES.forEach(function(t){
+        var o=document.createElement('option');
+        o.value=t;o.textContent=t||'—';
+        if(t===item.tone)o.selected=true;
+        sel.appendChild(o);
+      });
+      var saveBtn = document.createElement('button');
+      saveBtn.className = 'save-tom';
+      saveBtn.textContent = 'Salvar';
+      (function(it, s, ed, mt){
+        saveBtn.onclick = function(e){
+          e.stopPropagation();
+          var newTone = s.value;
+          it.tone = newTone;
+          customToms[it.id] = newTone;
+          saveCustomToms();
+          // Update in allCifras too
+          for(var i=0;i<allCifras.length;i++) if(allCifras[i].id===it.id){ allCifras[i].tone=newTone; break; }
+          ed.classList.remove('open');
+          mt.textContent = newTone || 'Sem tom';
+          setTimeout(render, 300);
+        };
+      })(item, sel, editor, meta);
+      editor.appendChild(lbl);
+      editor.appendChild(sel);
+      editor.appendChild(saveBtn);
+      info.appendChild(editor);
+
+      // Toggle editor on card click
+      card.onclick = function(e){
+        if(e.target.tagName==='OPTION'||e.target.tagName==='SELECT'||e.target.className==='save-tom') return;
+        editor.classList.toggle('open');
+      };
+    } else {
+      // Normal click = open file
+      card.style.cursor = 'pointer';
+      card.onclick = function(){ window.open(item.url,'_blank','noopener'); };
+    }
+
     var arr = document.createElement('span');
-    arr.className = 'cifra-arrow';
-    arr.innerHTML = '&#8250;';
+    arr.className = 'item-arrow';
+    arr.innerHTML = isSemTom ? '&#9998;' : '&#8250;';
 
     card.appendChild(icon);
     card.appendChild(info);
@@ -273,93 +426,21 @@ function render(){
   });
 }
 
-function sync(force){
-  var btn = document.getElementById('sync-btn');
-  btn.innerHTML = '<span class="spin">&#8635;</span> Buscando...';
-  btn.disabled = true;
-  setStatus('Buscando cifras no Drive...', 'loading');
-
-  fetchFromDrive(function(err, cifras){
-    btn.innerHTML = '&#8635; Sincronizar';
-    btn.disabled = false;
-    if(err === 'api_key_invalid'){
-      // Fallback: try without API key using public folder endpoint
-      fetchPublic(function(err2, cifras2){
-        if(err2){
-          setStatus('Configure a API Key para sincronizar', 'err');
-        } else {
-          allCifras = cifras2;
-          saveCache(cifras2);
-          try{ var t=localStorage.getItem(CACHE_TIME_KEY); setStatus('\u2713 '+cifras2.length+' cifras \u2013 '+formatTime(t), 'ok'); }catch(e){}
-          render();
-        }
-      });
-      return;
-    }
-    if(err){
-      setStatus('Erro: '+err, 'err');
-      return;
-    }
-    allCifras = cifras;
-    saveCache(cifras);
-    try{ var t=localStorage.getItem(CACHE_TIME_KEY); setStatus('\u2713 '+cifras.length+' cifras \u2013 '+formatTime(t), 'ok'); }catch(e){}
-    render();
-  });
-}
-
-// Public folder listing (no API key - uses gdrive export trick)
-function fetchPublic(callback){
-  // Use the Drive folder RSS/JSON export that works for public folders
-  var url = 'https://corsproxy.io/?url=' + encodeURIComponent(
-    'https://www.googleapis.com/drive/v3/files'
-    + '?q=' + encodeURIComponent("'" + FOLDER_ID + "' in parents and trashed=false")
-    + '&fields=files(id,name,mimeType)'
-    + '&pageSize=200'
-    + '&supportsAllDrives=true'
-  );
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url);
-  xhr.onload = function(){
-    try{
-      var data = JSON.parse(xhr.responseText);
-      if(!data.files){ callback('sem arquivos'); return; }
-      var files = data.files.filter(function(f){
-        return f.mimeType!=='application/vnd.google-apps.folder' && !/\.html?$/i.test(f.name);
-      });
-      var cifras = files.map(function(f){
-        return {name:cleanName(f.name), tone:extractTone(f.name), url:'https://drive.google.com/file/d/'+f.id+'/view', mime:f.mimeType};
-      });
-      cifras.sort(function(a,b){return a.name.localeCompare(b.name,'pt');});
-      callback(null, cifras);
-    }catch(e){ callback('parse error'); }
-  };
-  xhr.onerror = function(){ callback('network error'); };
-  xhr.send();
-}
-
-// Init
-document.getElementById('search-inp').oninput = function(){currentSearch=this.value;render();};
+// Events
+document.getElementById('search-inp').oninput = function(){ currentSearch=this.value; render(); };
 document.getElementById('filter-row').onclick = function(e){
   var btn=e.target.closest('.filter-btn');
   if(!btn)return;
   document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
-  currentFilter=btn.dataset.filter;
+  currentFilter = btn.dataset.filter;
   render();
 };
-document.getElementById('sync-btn').onclick = function(){sync(true);};
+document.getElementById('sync-btn').onclick = function(){ sync(); };
 
-// Load cache first, then auto-sync
-var cached = loadCache();
-if(cached && cached.length){
-  allCifras = cached;
-  try{ var t=localStorage.getItem(CACHE_TIME_KEY); setStatus('\u2713 '+cached.length+' cifras (cache de '+formatTime(t)+')', 'ok'); }catch(e){}
-  render();
-  // Auto-refresh in background after 5s
-  setTimeout(function(){sync(false);}, 5000);
-} else {
-  sync(true);
-}
+// Init
+if(!loadCache()){ sync(); }
+else{ setTimeout(sync, 3000); } // refresh in background
 
 })();
 </script>
